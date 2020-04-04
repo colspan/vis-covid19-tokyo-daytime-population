@@ -1,0 +1,68 @@
+.map-title {
+    background-color: rgba(96, 210, 255, 0.2);
+    border-color: rgb(98, 179, 255);
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px 10px;
+    color: rgb(98, 179, 255);
+}
+
+.map-title h1 {
+    font-size: 48pt;
+    margin: 0;
+}
+
+.map-indicator {
+    background-color: rgba(96, 210, 255, 0.2);
+    border-color: rgb(98, 179, 255);
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px 10px;
+    color: white;
+    padding: 2px 10px;
+    width: 500px;
+}
+
+.map-indicator .datetime {
+    font-size: 42pt;
+}
+
+.map-indicator .selector {
+    width: 100%;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    background: rgba(0, 0, 0, 0.7);
+    height: 24px;
+    width: 240px;
+    border-radius: 8px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: rgb(98, 179, 255);
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
+input[type=range]::-ms-tooltip {
+    display: none;
+}
+
+input[type=range]::-moz-range-track {
+    height: 0;
+}
+
+input[type=range]::-moz-range-thumb {
+    background: rgb(98, 179, 255);
+    height: 20px;
+    width: 20px;
+    border: none;
+    border-radius: 50%;
+}
+
+.leaflet-tile-container img {
+    filter: invert(100%) hue-rotate(180deg);
+}
