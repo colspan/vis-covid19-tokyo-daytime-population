@@ -1,0 +1,32 @@
+{
+  "name": "covid-2019-tokyo-daytime-population",
+  "version": "0.0.0",
+  "description": "COVID-19 Tokyo Daytime Population Transition",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:colspan/vis-covid19-tokyo-daytime-population.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start:dev": "webpack-dev-server --watch-content-base",
+    "deploy": "gh-pages -d dist"
+  },
+  "author": "Kunihiko Miyoshi",
+  "license": "MIT",
+  "dependencies": {
+    "colormap": "^2.3.1",
+    "leaflet": "^1.4.0",
+    "topojson": "^3.0.2"
+  },
+  "devDependencies": {
+    "css-loader": "^3.2.0",
+    "file-loader": "^1.1.11",
+    "gh-pages": "^2.1.1",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.19.1",
+    "webpack": "^4.41.1",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2"
+  }
+}
