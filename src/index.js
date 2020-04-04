@@ -34,15 +34,14 @@ Promise.all([
 ])
   .then(result => {
     const [mapData, ypLog] = result
-    const city_ids = Object.keys(ypLog)
-    const dates = ypLog[city_ids[0]].value.date
-    console.log(ypLog, ypLog[city_ids[0]].value.date)
-
+    const cityIds = Object.keys(ypLog)
+    const dates = ypLog[cityIds[0]].value.date
+    // console.log(ypLog, ypLog[cityIds[0]].value.date)
 
     // calc max, min
     const maxFunc = (a, b) => a > b ? a : b
     const minFunc = (a, b) => a < b ? a : b
-    const cityMaxMins = city_ids.map(cid => {
+    const cityMaxMins = cityIds.map(cid => {
       const cityLog = ypLog[cid]
       const targetKey = '来訪者'
       const max = cityLog.value[targetKey].reduce(maxFunc)
@@ -52,9 +51,12 @@ Promise.all([
     const wholeCityMax = cityMaxMins.map(x => x[0]).reduce(maxFunc)
 
     // state variables
+    const logOffset = 7
     let logIndex = 0
+
+    // choropleth map
     const levelColor = colormap({
-      colormap: 'portland',
+      colormap: 'RdBu',
       nshades: 30,
       format: 'hex',
       alpha: 1,
@@ -70,16 +72,23 @@ Promise.all([
     function updateChoroplethMap() {
       colMap.setStyle(feature => {
         try {
-          const city_id = feature.id
-          const current_log = ypLog[city_id]
-          const current_value = current_log.value['来訪者'][logIndex]
-          const color = levelColor[parseInt((current_value) / wholeCityMax * (levelColor.length - 1), 10)]
+          const cityId = feature.id
+          const [cityMax, cityMin] = cityMaxMins[cityIds.findIndex(d => d === cityId)]
+          const currentLog = ypLog[cityId]
+          const baseValue = currentLog.value['来訪者'][logIndex % logOffset]
+          const currentValue = currentLog.value['来訪者'][logIndex]
+          const changeDiff = currentValue - baseValue
+          let colorIndex = parseInt((changeDiff / cityMax) * (levelColor.length - 1) + levelColor.length / 2, 10)
+          colorIndex = colorIndex < 0 ? 0 : colorIndex
+          colorIndex = colorIndex >= levelColor.length ? levelColor.length - 1 : colorIndex
+          const color = levelColor[colorIndex]
           return {
             fillColor: color,
             opacity: 1.0,
           }
         }
         catch (e) {
+          console.error(e)
           // do nothing
         }
       })
@@ -94,19 +103,26 @@ Promise.all([
     mapIndicatorContainer.getContainer().appendChild(currentTimeContainer)
     const timeSliderContainer = document.createElement('input')
     /// time slider
+    const fmtOpts = {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      weekday: 'short', timeZone: 'Asia/Tokyo',
+    };
+    const dateFmt = new Intl.DateTimeFormat('ja-JP', fmtOpts);
+
     timeSliderContainer.className = 'selector'
     timeSliderContainer.type = 'range'
     timeSliderContainer.min = 0
     timeSliderContainer.max = dates.length - 1
     mapIndicatorContainer.getContainer().appendChild(timeSliderContainer)
     function updateIndicator() {
-      currentTimeContainer.innerHTML = dates[logIndex]
+      const current_date = Date.parse(dates[logIndex])
+      currentTimeContainer.innerHTML = dateFmt.format(current_date)
       mapIndicatorContainer.value = logIndex
       timeSliderContainer.value = logIndex
     }
 
     // start animation
-    const updateInterval = 200
+    const updateInterval = 500
     let animIntervalObj
     const updateIndex = (newIndex) => {
       if (isUndefined(newIndex)) {
