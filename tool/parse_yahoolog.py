@@ -79,7 +79,7 @@ def convert_ypopulation_log(infile):
         for i, row in enumerate(ws.rows):
             values = [cell.value for cell in row]
             if i == 0:
-                datetimes += values[2:]
+                datetimes = values[2:]
             else:
                 city = values[0]
                 cities.append(city)
@@ -101,15 +101,22 @@ def convert_ypopulation_log(infile):
                     logs[city_id] = {
                         'id': city_id,
                         'name': city,
-                        'value': {},
+                        'value': {
+                            'date': [],
+                        },
                     }
                 if c not in logs[city_id]['value']:
                     logs[city_id]['value'][c] = []
                 logs[city_id]['value'][c] += rows
+        for city, rows in zip(cities, values):
+            try:
+                city_id = r_tokyo_id_table[city]
+            except:
+                continue
+            logs[city_id]['value']['date'] += [
+                x.strftime('%Y/%m/%d') for x in datetimes]
 
-                logs[city_id]['value']['date'] = [
-                    x.strftime('%Y/%m/%d') for x in datetimes]
-        return logs
+    return logs
 
 
 logs = convert_ypopulation_log('../data/東京23区推移0403.xlsx')
