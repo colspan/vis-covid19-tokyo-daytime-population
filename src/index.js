@@ -18,8 +18,9 @@ const map = L.map('map', {
   zoomControl: false,
 })
 const attribution = [
-  'Tiles &copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
-  'Polulation Log &copy; <a href="https://ds.yahoo.co.jp/topics/20200403.html">ヤフー・データソリューション</a>',
+  'Tiles <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>',
+  'Boundary Data <a href="https://github.com/niiyz/JapanCityGeoJson/">JapanCityGeoJson</a>',
+  'Polulation Log <a href="https://ds.yahoo.co.jp/topics/20200403.html">ヤフー・データソリューション</a>',
   'Visualization &copy; <a href="https://github.com/colspan">@colspan</a>',
 ].join(' | ')
 const basemap = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { attribution })
@@ -83,61 +84,6 @@ Promise.all([
         }
       })
     }
-
-    // // markers
-    // const siteInfoMarkers = riverSiteInfo.map(d => {
-    //   const marker = L.circleMarker(d.coordinate, {
-    //     weight: 1,
-    //   }).addTo(map)
-    //   const text = `${d.site_name}`
-    //   marker.bindTooltip(text)
-    //   marker.site_id = d.site_id
-    //   return marker
-    // })
-    // // update markers
-    // function updateMarkers() {
-    //   siteInfoMarkers.forEach((d, i) => {
-    //     let value = riverLog[logIndex][d.site_id]
-    //     const [max, min] = riverSiteMaxMin[i]
-    //     const color = levelColor[parseInt((value - min) / (max - min) * (levelColor.length - 1), 10)]
-    //     if (!isNaN(value)) {
-    //       d.setRadius((value - min) * 10 + 5)
-    //       d.setStyle({
-    //         color,
-    //         fillColor: color,
-    //       })
-    //     } else {
-    //       d.setRadius(1)
-    //     }
-    //   })
-    // }
-
-    // // typhoon track
-    // const typhoonTrackTimes = Object.keys(typhoonTrackLog).map(d => +d)
-    // const typhoonTrackPositions = Object.values(typhoonTrackLog)
-    // const typhoonTrackPath = L.polyline(typhoonTrackPositions, { color: 'yellow', weight: 1 })
-    // typhoonTrackPath.addTo(map)
-    // const typhoonPosMarker = L.marker(typhoonTrackPositions[0])
-    // typhoonPosMarker.addTo(map)
-    // function updateTyphoonTrack() {
-    //   const currentTime = Date.parse(riverLog[logIndex].datetime) / 1000
-    //   const targetIndex = typhoonTrackTimes.reduce((pre, current, i) => current <= currentTime ? i : pre, 0)
-    //   let currentPos
-    //   if (targetIndex === 0 || targetIndex === typhoonTrackPositions.length - 1) {
-    //     currentPos = typhoonTrackPositions[targetIndex]
-    //   } else {
-    //     const lastPos = typhoonTrackPositions[targetIndex]
-    //     const nextPos = typhoonTrackPositions[targetIndex + 1]
-    //     const linearInterpolation = (x, y, i, x_d) => {
-    //       return (y[i + 1] - y[i]) / (x[i + 1] - x[i]) * (x_d - x[i]) + y[i]
-    //     }
-    //     currentPos = [
-    //       linearInterpolation(typhoonTrackTimes, typhoonTrackPositions.map(d => d[0]), targetIndex, currentTime),
-    //       linearInterpolation(typhoonTrackTimes, typhoonTrackPositions.map(d => d[1]), targetIndex, currentTime)
-    //     ]
-    //   }
-    //   typhoonPosMarker.setLatLng(currentPos)
-    // }
 
     // indicator
     const mapIndicator = L.control.emptyDiv({ position: 'bottomleft', className: 'map-indicator' })
